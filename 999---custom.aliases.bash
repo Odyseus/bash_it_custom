@@ -13,8 +13,9 @@ fi
 # sudo is too long! LOL
 alias _="sudo"
 
-# sudo is too long! LOL
 alias r="reset"
+alias rr="tmux clear-history"
+alias rrr="reset ; tmux clear-history"
 
 # Death to Python 2!!!
 alias py='python3'
