@@ -15,20 +15,19 @@ ODY_Y="\[\033[38;5;11;1m\]"         # Yellow
 ODY_R="\[\033[38;5;215;1m\]"        # Red
 ODY_N="\[\033[0m\]"                 # Reset/No color
 
-prompt_command() {
-    local ps1_sym
-    local python_virt_env
-    # Check the exit code of the previous command and display different
-    # colors in the prompt accordingly.
-    if [ $? -eq 0 ]; then
-        ps1_sym="$ODY_W"❯"$ODY_N"
+set_prompt_symbol() {
+    if [[ $1 -eq 0 ]]; then
+        PROMPT_SYMBOL="$ODY_W❯$ODY_N"
     else
-        ps1_sym="$ODY_R"❯"$ODY_N"
+        PROMPT_SYMBOL="$ODY_R❯$ODY_N"
     fi
+}
 
-    # Check the exit code of the previous command and display different
-    # colors in the prompt accordingly.
+prompt_command() {
+    set_prompt_symbol $?
+    local python_virt_env
 
+    # Python virtual environment.
     if [[ -n "${VIRTUAL_ENV}" ]]; then
         local python_virt_env_name='$(basename "${VIRTUAL_ENV}")'
 
@@ -51,7 +50,7 @@ prompt_command() {
         fi
 
         PS1="$user_host$ODY_Y[$ODY_R\w/$ODY_Y]$ODY_R\n\
-$python_virt_env$ODY_W"#"$ODY_N${ps1_sym} $ODY_N"
+$python_virt_env$ODY_W"#"$ODY_N${PROMPT_SYMBOL} $ODY_N"
 
         PS2="$ODY_Y-$ODY_R-$ODY_R-$ODY_N "
     else
@@ -60,7 +59,7 @@ $python_virt_env$ODY_W"#"$ODY_N${ps1_sym} $ODY_N"
         fi
 
         PS1="$user_host$ODY_G[$ODY_O\w/$ODY_G]\n\
-$python_virt_env$ODY_W\$$ODY_N${ps1_sym} $ODY_N"
+$python_virt_env$ODY_W\$$ODY_N${PROMPT_SYMBOL} $ODY_N"
 
         PS2="$ODY_G-$ODY_O-$ODY_O-$ODY_N "
     fi
