@@ -77,3 +77,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias restart-cinnamon='nohup cinnamon --replace > /dev/null 2>&1 &'
 
 alias gksudo='pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'
+
+alias you='youtube-dl -o "$HOME/Videos/%(title)s.%(ext)s"'
+
