@@ -80,3 +80,5 @@ alias gksudo='pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'
 
 alias you='youtube-dl -o "$HOME/Videos/%(title)s.%(ext)s"'
 
+alias bashrc-reload='. ~/.bashrc'
+
