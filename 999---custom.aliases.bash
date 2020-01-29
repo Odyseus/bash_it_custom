@@ -70,15 +70,19 @@ export VISUAL=nano
 # Rebase local git repository.
 alias gitrebasemaster='echo -e "$(tput bold)$(tput setaf 10)Checking out master...$(tput sgr0)" && git checkout master && echo -e "$(tput bold)$(tput setaf 10)Fetching...$(tput sgr0)" && git fetch upstream && echo -e "$(tput bold)$(tput setaf 10)Rebasing...$(tput sgr0)" && git rebase upstream/master && echo -e "$(tput bold)$(tput setaf 10)Pushing...$(tput sgr0)" && git push origin master'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 alias restart-cinnamon='nohup cinnamon --replace > /dev/null 2>&1 &'
 
 alias gksudo='pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'
 
-alias you='youtube-dl -o "$HOME/Videos/%(title)s.%(ext)s"'
+alias youvideo='youtube-dl -o "$HOME/Videos/%(title)s.%(ext)s"'
+
+alias youaudio='youtube-dl -o "$HOME/Music/%(title)s.%(ext)s" -f "bestaudio[ext=m4a]"'
 
 alias bashrc-reload='. ~/.bashrc'
 
+__gitio_func() {
+    echo "Shortening URL..."
+    curl -i https://git.io -F "url=$1" && echo ""
+}
+
+alias gitio="__gitio_func $1"
