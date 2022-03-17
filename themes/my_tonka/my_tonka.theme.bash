@@ -12,8 +12,12 @@ ODY_W="\[\033[1;37m\]"              # White
 ODY_G="\[\033[38;5;84;1m\]"         # Green
 ODY_O="\[\033[38;5;220;1m\]"        # Orange
 ODY_Y="\[\033[38;5;11;1m\]"         # Yellow
-ODY_R="\[\033[38;5;215;1m\]"        # Red
+ODY_R="\[\033[49;5;91;1m\]"         # Red
 ODY_N="\[\033[0m\]"                 # Reset/No color
+
+# bool function to test if the user is root or not (POSIX only)
+# <3 https://stackoverflow.com/a/52586842
+is_user_root() { [ "$(id -u)" -eq 0 ]; }
 
 set_prompt_symbol() {
     if [[ $1 -eq 0 ]]; then
@@ -29,12 +33,21 @@ prompt_command() {
 
     # Python virtual environment.
     if [[ -n "${VIRTUAL_ENV}" ]]; then
-        local python_virt_env_name='$(basename "${VIRTUAL_ENV}")'
+        local python_virt_env_name
 
-        if [ $? -eq 0 ]; then
-            python_virt_env="$ODY_G[$ODY_O$python_virt_env_name$ODY_G]$ODY_N"
+        # NOTE: If the Python virtual environment was created with a custom prompt, use that prompt.
+        if [[ -n "${VIRTUAL_ENV_PROMPT}" ]]; then
+            # NOTE: All this stupid mambo yambo is to clean the prompt created by the activate script.
+            # Removed the parentheses and the last space.
+            python_virt_env_name="${VIRTUAL_ENV_PROMPT:1:${#VIRTUAL_ENV_PROMPT}-3}"
         else
+            python_virt_env_name='$(basename "${VIRTUAL_ENV}")'
+        fi
+
+        if is_user_root; then
             python_virt_env="$ODY_Y[$ODY_R$python_virt_env_name$ODY_Y]$ODY_N"
+        else
+            python_virt_env="$ODY_G[$ODY_O$python_virt_env_name$ODY_G]$ODY_N"
         fi
     else
         python_virt_env=""
@@ -44,7 +57,7 @@ prompt_command() {
     local user_host
     user_host=""
 
-    if [[ ${EUID} == 0 ]] ; then
+    if is_user_root; then
         if [[ "$USER" != "$LOGNAME" || -n "$SSH_CLIENT" ]]; then
             user_host="$ODY_Y[$ODY_R\u$ODY_Y@$ODY_R\h$ODY_Y]"
         fi
